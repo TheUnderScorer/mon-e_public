@@ -2,14 +2,20 @@ name: Dispatch test & release
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-      - test
 
+env:
+  NX_BRANCH: ${{ github.event.client_payload.number || github.event.client_payload.ref }}
 jobs:
-  dispatch:
-    name: Test run
+  unit-tests-and-lint:
+    name: Unit tests and lint
     runs-on: ubuntu-latest
+
     steps:
-      - run: sleep 10 && exit 1
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.CI_GITHUB_TOKEN }}
+          fetch-depth: 0
+          repository: ${{ secrets.REPOSITORY }}
+          ref: ${{ github.event.client_payload.github.ref }}
+
+      - run: ls -a
