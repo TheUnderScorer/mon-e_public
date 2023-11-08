@@ -82,6 +82,11 @@ jobs:
           bundler-cache: true
           ruby-version: 3.2
 
+      - name: Start iPhone
+        uses: futureware-tech/simulator-action@v3
+        with:
+          model: 'iPhone 15'
+
       - name: Get npm cache directory
         id: npm-cache-dir
         run: |
