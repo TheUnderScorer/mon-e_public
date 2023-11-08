@@ -74,6 +74,7 @@ jobs:
         run: |
           brew tap wix/brew
           brew install applesimutils
+          brew install fastlane
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
