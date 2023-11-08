@@ -82,10 +82,11 @@ jobs:
           bundler-cache: true
           ruby-version: 3.2
 
-      - name: Start iPhone
-        uses: futureware-tech/simulator-action@v3
-        with:
-          model: 'iPhone 15'
+      - name: Create simulator
+        run: |
+          xcrun simctl list runtimes
+          xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimRuntime.iOS-17-0"
+          xcrun simctl list devices
 
       - name: Get npm cache directory
         id: npm-cache-dir
