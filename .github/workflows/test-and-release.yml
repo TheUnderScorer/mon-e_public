@@ -1,0 +1,15 @@
+name: Dispatch test & release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - test
+
+jobs:
+  dispatch:
+    name: Dispatch
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Done"
