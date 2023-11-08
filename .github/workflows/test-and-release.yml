@@ -85,7 +85,7 @@ jobs:
       - name: Setup xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest-stable
+          xcode-version: 15.0.1
 
       - name: Create simulator
         run: |
