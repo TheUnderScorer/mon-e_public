@@ -9,7 +9,7 @@ on:
 
 jobs:
   dispatch:
-    name: Dispatch
+    name: Test run
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Done"
+      - run: exit 1
