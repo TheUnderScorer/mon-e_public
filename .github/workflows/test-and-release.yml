@@ -107,7 +107,7 @@ jobs:
         run: npx nx build-ios mobile-e2e
 
       - name: Unpack app
-        run: tar -xf Mon-e.tar.gz && ls -a && mv Payload/Mone.app ./
+        run: tar -xf Mon-e.tar.gz && ls -a
         working-directory: apps/mobile/dist
 
       - name: Run tests
