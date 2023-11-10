@@ -111,7 +111,7 @@ jobs:
         working-directory: apps/mobile/dist
 
       - name: Run tests
-        run: npx nx test-ios mobile-e2e --reuse
+        run: npx nx test-ios mobile-e2e
 
       - name: Upload built app
         if: always()
