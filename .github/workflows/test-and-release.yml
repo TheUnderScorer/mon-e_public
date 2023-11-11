@@ -5,6 +5,7 @@ on:
 
 env:
   NX_BRANCH: ${{ github.event.client_payload.number || github.event.client_payload.ref }}
+  COMMIT_SHA: ${{ github.event.client_payload.sha }}
   HOMEBREW_NO_AUTO_UPDATE: 1
   HOMEBREW_NO_INSTALL_CLEANUP: 1
 jobs:
@@ -13,6 +14,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set status
+        uses: Sibz/github-status-action@v1
+        with:
+          authToken: ${{ secrets.CI_GITHUB_TOKEN }}
+          context: 'Unit tests and lint'
+          description: 'Pending'
+          state: 'pending'
+          sha: ${{ env.COMMIT_SHA }}
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.CI_GITHUB_TOKEN }}
@@ -46,11 +55,39 @@ jobs:
 
       - name: Test
         run: npx nx run-many --target=test
+
+      - name: Set status
+        uses: Sibz/github-status-action@v1
+        if: failure()
+        with:
+          authToken: ${{ secrets.CI_GITHUB_TOKEN }}
+          context: 'Unit tests and lint'
+          description: 'Failure'
+          state: 'failure'
+          sha: ${{ env.COMMIT_SHA }}
+
+      - name: Set status
+        uses: Sibz/github-status-action@v1
+        if: success()
+        with:
+          authToken: ${{ secrets.CI_GITHUB_TOKEN }}
+          context: 'Unit tests and lint'
+          description: 'Success'
+          state: 'success'
+          sha: ${{ env.COMMIT_SHA }}
   ios-e2e:
     name: iOS E2E tests
     runs-on: macos-latest
 
     steps:
+      - name: Set status
+        uses: Sibz/github-status-action@v1
+        with:
+          authToken: ${{ secrets.CI_GITHUB_TOKEN }}
+          context: 'iOS E2E tests'
+          description: 'Pending'
+          state: 'pending'
+          sha: ${{ env.COMMIT_SHA }}
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.CI_GITHUB_TOKEN }}
@@ -119,3 +156,24 @@ jobs:
         with:
           name: .detox-artifacts
           path: apps/mobile/.detox-artifacts
+
+      - name: Set status
+        uses: Sibz/github-status-action@v1
+        if: failure()
+        with:
+          authToken: ${{ secrets.CI_GITHUB_TOKEN }}
+          context: 'iOS E2E tests'
+          description: 'Failure'
+          state: 'failure'
+          sha: ${{ env.COMMIT_SHA }}
+
+      - name: Set status
+        uses: Sibz/github-status-action@v1
+        if: success()
+        with:
+          authToken: ${{ secrets.CI_GITHUB_TOKEN }}
+          context: 'iOS E2E tests'
+          description: 'Success'
+          state: 'success'
+          sha: ${{ env.COMMIT_SHA }}
+
