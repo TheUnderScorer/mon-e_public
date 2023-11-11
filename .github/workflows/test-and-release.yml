@@ -1,7 +1,8 @@
 name: Test & release
 
 on:
-  workflow_dispatch:
+  repository_dispatch:
+    types: [testAndRelease]
 
 env:
   NX_BRANCH: ${{ github.event.client_payload.number || github.event.client_payload.ref }}
