@@ -14,6 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Output metadata
+        run: |
+          echo "sha=${{ env.COMMIT_SHA }}" >> ${GITHUB_OUTPUT}
+          echo "branch=${{ env.NX_BRANCH }}" >> ${GITHUB_OUTPUT}
       - name: Set status
         uses: Sibz/github-status-action@v1
         with:
