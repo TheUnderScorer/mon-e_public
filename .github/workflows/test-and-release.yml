@@ -247,7 +247,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npx nx run mobile:build --platform ios --profile preview --local --no-interactive --output=Mone.ipa
+        run: npx nx run mobile:build --platform ios --profile preview --local --no-interactive --output=dist/Mone.ipa
 
       - name: Upload built app
         if: always()
