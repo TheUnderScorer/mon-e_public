@@ -258,6 +258,8 @@ jobs:
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
+        env:
+          URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           server_address: smtp.gmail.com
           username: ${{secrets.MAIL_USERNAME}}
@@ -272,13 +274,11 @@ jobs:
           # Required sender full name (address can be skipped):
           from: GitHub # <user@example.com>
           # Optional plain body:
-          body: Build job of ${{github.repository}} completed successfully!
+          body: 'Build job of ${{github.repository}} completed successfully! Artifacts link: ${{env.URL}}'
           # Optional unsigned/invalid certificates allowance:
           ignore_cert: true
           # Optional converting Markdown to HTML (set content_type to text/html too):
           convert_markdown: true
-          # Optional attachments:
-          attachments: apps/mobile/dist/Mone.ipa
           # Optional priority: 'high', 'normal' (default) or 'low'
           priority: low
 
