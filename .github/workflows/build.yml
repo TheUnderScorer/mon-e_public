@@ -74,6 +74,8 @@ jobs:
 
       - name: Build
         run: npx nx run mobile:build --platform ios --profile ${{matrix.profile}} --local --no-interactive --output=dist/Mone.ipa
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Upload built app
         if: always()
