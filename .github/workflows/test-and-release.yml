@@ -188,6 +188,9 @@ jobs:
           state: 'success'
           sha: ${{ env.COMMIT_SHA }}
   preview-ios-build:
+    strategy:
+      matrix:
+        profile: [preview, preview-simulator]
     name: Preview iOS Build
     runs-on: macos-latest
 
@@ -196,7 +199,7 @@ jobs:
         uses: Sibz/github-status-action@v1
         with:
           authToken: ${{ secrets.CI_GITHUB_TOKEN }}
-          context: 'Preview iOS build'
+          context: 'Preview iOS build ${{matrix.profile}}'
           repository: ${{ secrets.REPOSITORY }}
           description: 'Pending'
           state: 'pending'
@@ -247,7 +250,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npx nx run mobile:build --platform ios --profile preview --local --no-interactive --output=dist/Mone.ipa
+        run: npx nx run mobile:build --platform ios --profile ${{matrix.profile}} --local --no-interactive --output=dist/Mone.ipa
 
       - name: Upload built app
         if: always()
@@ -287,7 +290,7 @@ jobs:
         if: failure()
         with:
           authToken: ${{ secrets.CI_GITHUB_TOKEN }}
-          context: 'Preview iOS build'
+          context: 'Preview iOS build ${{matrix.profile}}'
           description: 'Failure'
           repository: ${{ secrets.REPOSITORY }}
           state: 'failure'
@@ -299,7 +302,7 @@ jobs:
         with:
           authToken: ${{ secrets.CI_GITHUB_TOKEN }}
           repository: ${{ secrets.REPOSITORY }}
-          context: 'Preview iOS build'
+          context: 'Preview iOS build ${{matrix.profile}}'
           description: 'Success'
           state: 'success'
           sha: ${{ env.COMMIT_SHA }}
