@@ -13,7 +13,7 @@ jobs:
   preview-ios-build:
     strategy:
       matrix:
-        profile: [preview, preview-simulator]
+        profile: [preview, preview-simulator, development, development-simulator]
     name: Preview iOS Build
     runs-on: macos-latest
 
@@ -84,12 +84,14 @@ jobs:
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
+        continue-on-error: true
         env:
           URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           server_address: smtp.gmail.com
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
+          attachments: apps/mobile/dist/Mone.ipa
           # Server port, default 25:
           server_port: 465
           secure: true
