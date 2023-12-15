@@ -256,7 +256,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Mone.ipa
+          name: Mone.${{matrix.profile}}.ipa
           path: apps/mobile/dist/Mone.ipa
 
       - name: Send mail
