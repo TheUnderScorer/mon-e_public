@@ -49,11 +49,12 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
           packager: npm
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-          ruby-version: 3.2
+      - name: Setup Ruby 3.2
+        run: |
+          brew install rbenv
+          rbenv install 3.2.0
+          rbenv global 3.2.0
+          gem install bundler
 
       - name: Install macOS dependencies
         run: |
