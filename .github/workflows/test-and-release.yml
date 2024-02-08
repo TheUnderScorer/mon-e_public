@@ -5,7 +5,6 @@ on:
     types: [testAndRelease]
 
 env:
-  NX_BRANCH: ${{ github.event.client_payload.number || github.event.client_payload.ref }}
   COMMIT_SHA: ${{ github.event.client_payload.sha }}
   HOMEBREW_NO_AUTO_UPDATE: 1
   HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -18,7 +17,6 @@ jobs:
       - name: Output metadata
         run: |
           echo "sha=${{ env.COMMIT_SHA }}" >> ${GITHUB_OUTPUT}
-          echo "branch=${{ env.NX_BRANCH }}" >> ${GITHUB_OUTPUT}
       - name: Set status
         uses: Sibz/github-status-action@v1
         with:
@@ -38,29 +36,34 @@ jobs:
       - name: Set Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20.x
+          node-version: 21.x
 
-      - name: Get npm cache directory
-        id: npm-cache-dir
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
         run: |
-          echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - uses: actions/cache@v3
-        id: npm-cache
+        name: Setup pnpm cache
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-pnpm-store-
 
-      - name: Install npm dependencies
-        run: npm install
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Lint
-        run: npx nx run-many --target=lint
+        run: pnpm lint
 
       - name: Test
-        run: npx nx run-many --target=test
+        run: pnpm test
 
       - name: Set status
         uses: Sibz/github-status-action@v1
@@ -107,7 +110,7 @@ jobs:
       - name: Set Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20.x
+          node-version: 21.x
 
       - name: Setup EAS
         uses: expo/expo-github-action@v8
@@ -133,38 +136,46 @@ jobs:
         with:
           model: 'iPhone 14'
 
-      - name: Get npm cache directory
-        id: npm-cache-dir
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
         run: |
-          echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - uses: actions/cache@v3
-        id: npm-cache
+        name: Setup pnpm cache
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-pnpm-store-
 
-      - name: Install npm dependencies
-        run: npm install
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build app
+        run: detox build --configuration ios.sim.local
 
       - name: Run tests
-        run: npx nx test-ios mobile-e2e --skip-nx-cache
+        run: detox test --configuration ios.sim.local
 
       - name: Upload built app
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: Mone.app
-          path: apps/mobile/dist/Mone.app
+          path: dist/Mone.app
 
       - name: Upload detox artifacts
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: .detox-artifacts
-          path: apps/mobile/.detox-artifacts
+          path: .detox-artifacts
 
       - name: Set status
         uses: Sibz/github-status-action@v1
