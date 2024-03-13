@@ -41,24 +41,6 @@ jobs:
         with:
           node-version: 21.x
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-          packager: npm
-
-      - name: Setup Ruby 3.2
-        run: |
-          brew install rbenv
-          rbenv install 3.2.0
-          rbenv global 3.2.0
-          gem install bundler
-
-      - name: Install macOS dependencies
-        run: |
-          brew install fastlane
-
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         with:
@@ -77,6 +59,17 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+
+      - name: Setup Ruby 3.2
+        run: |
+          brew install rbenv
+          rbenv install 3.2.0
+          rbenv global 3.2.0
+          gem install bundler
+
+      - name: Install macOS dependencies
+        run: |
+          brew install fastlane
 
       - name: Install dependencies
         run: pnpm install
