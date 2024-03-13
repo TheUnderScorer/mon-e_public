@@ -150,10 +150,10 @@ jobs:
         run: pnpm install
 
       - name: Build app
-        run: detox build --configuration ios.sim.local
+        run: pnpm exec detox build --configuration ios.sim.local
 
       - name: Run tests
-        run: detox test --configuration ios.sim.local
+        run: pnpm exec detox test --configuration ios.sim.local
 
       - name: Upload built app
         if: always()
