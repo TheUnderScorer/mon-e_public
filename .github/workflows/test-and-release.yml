@@ -138,7 +138,7 @@ jobs:
       - name: Start iPhone
         uses: futureware-tech/simulator-action@v3
         with:
-          model: 'iPhone 15'
+          model: 'iPhone 14'
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
