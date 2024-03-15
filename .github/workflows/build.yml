@@ -75,7 +75,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm exec eas build --platform ios --profile ${{matrix.profile}} --local --no-interactive --output=dist/Mone.ipa
+        run: pnpm exec eas build --platform ios --profile ${{matrix.profile}} --local --non-interactive --output=dist/Mone.ipa
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           EXPO_PUBLIC_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
